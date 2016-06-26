@@ -1,0 +1,58 @@
+package org.selenium2automate.framework.testrunner;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+
+import org.selenium2automate.framework.WebDriverGenerator;
+
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(
+		features = "classpath:Test Scenario/",
+		tags={"@Login"},
+		glue ={"com.autoease.framework.customizedsteps","com.autoease.framework.mobilesteps","com.autoease.framework.websteps"},
+		monochrome = true, 
+		format={"pretty",
+				"json:target/cucumber-json-report/cucumber.json",
+				"html:target/cucumber-html-report",
+				"rerun:target/cucumber-failed-report/faile,d-rerun.txt"}
+		)
+
+//,tags={"@groupTest"}
+public class CucumberTestRunner {
+
+	static{
+		//here goes the code to print the initiation of this framework
+
+	}
+
+
+	@BeforeClass
+	public static void setUp(){
+		System.out.println("*******************************************************************");
+		System.out.println("*****************************Welcome to****************************");
+		System.out.println("************************Auto-Ease Framework************************");
+		System.out.println("*******************************************************************");
+	}
+
+	
+	@AfterClass
+	public static void shutDown(){
+		try {
+			WebDriverGenerator.getWebDriver().close();
+		}catch (Exception e){
+			System.out.println("some exception occred in closing the browser");
+		}
+		//System.out.println("\n\n\nThanks for using the AutoEase framework, We hope you like it, please send your feedback on gauravtiwari91@yahoo.com");
+		System.out.println("*******************************************************************");
+		System.out.println("*****************************Thank You*****************************");
+		System.out.println("************************For using the Framework********************");
+		System.out.println("*************************Send your feedback on*********************");
+		System.out.println("***********************GAURAVTIWARI91@YAHOO.COM********************");
+		System.out.println("*******************************************************************");
+	
+	}
+}

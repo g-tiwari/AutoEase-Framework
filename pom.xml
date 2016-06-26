@@ -2,19 +2,19 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.gaurav.framework</groupId>
+  <groupId>org.selenium2automate.framework</groupId>
   <artifactId>AutoEase-Framework</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>AutoEase-Framework</name>
-  <url>http://maven.apache.org</url>
+  <url>http://selenium2automate.wordpress.com</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <cucumber-jvm.version>1.2.0</cucumber-jvm.version>
-    <selenium.version>2.53.0</selenium.version>
-    <junit.version>4.11</junit.version>
+    <cucumber-jvm.version>RELEASE</cucumber-jvm.version>
+    <selenium.version>RELEASE</selenium.version>
+    <junit.version>RELEASE</junit.version>
       <webdrivermanager.version>RELEASE</webdrivermanager.version>
   </properties>
 
