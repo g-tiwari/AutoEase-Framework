@@ -3,7 +3,7 @@ package org.selenium2automate.framework.websteps;
 public class Reusable {
 	
 	public AssertionsSteps as;
-	public BrowserRelated br;
+	public NavigationSteps br;
 	public InputSteps is;
 	public TypeAndClickSteps tf;
 	
@@ -13,7 +13,7 @@ public class Reusable {
 	public Reusable(){
 		System.out.println("reusable contructor");
 		 as=new AssertionsSteps();
-		 br=new BrowserRelated();
+		 br=new NavigationSteps();
 		 is=new InputSteps();
 		 tf=new TypeAndClickSteps();
 		

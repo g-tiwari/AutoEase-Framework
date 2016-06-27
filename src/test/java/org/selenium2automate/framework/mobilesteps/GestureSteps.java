@@ -1,4 +1,4 @@
-package org.selenium2automate.framework.mobileSteps;
+package org.selenium2automate.framework.mobilesteps;
 
 import org.openqa.selenium.WebDriver;
 
@@ -8,8 +8,6 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 public class GestureSteps {
-
-	WebDriver driver =WebDriverGenerator.getWebDriver();
 	
 	@Then("^I deselect \"(.*)\" from dropdown identifier \"(.*)\"$")
 	public void I_deselect_from_dropdown_identifier(String params1,String params2) throws Throwable {

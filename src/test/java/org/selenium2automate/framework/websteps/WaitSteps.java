@@ -15,7 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import org.selenium2automate.framework.Constants;
 import static org.selenium2automate.framework.WebDriverGenerator.getDriver;
-import static org.selenium2automate.framework.WebDriverGenerator.getWaitObject;
+import static org.selenium2automate.framework.WebDriverGenerator.getWait;
 import static org.selenium2automate.framework.WebDriverGenerator.getLocator;
 
 import cucumber.api.java.en.And;
@@ -96,7 +96,7 @@ public class WaitSteps {
 
 	@And("^I wait for presence of element \"(.*)\"$")
 	public void I_wait_for_presence_of_element(String params1) throws Throwable {
-		getWaitObject().until(ExpectedConditions.presenceOfElementLocated(getLocator(params1)));
+		getWait().until(ExpectedConditions.presenceOfElementLocated(getLocator(params1)));
 	//throw new PendingException();
 	
 	}

@@ -7,8 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.selenium2automate.framework.WebDriverGenerator;
 
 public class VerificationSteps {
-	WebDriver driver = WebDriverGenerator.getWebDriver();
-	WebDriverGenerator gen;
+
 	 @Rule
 	 public ErrorCollector collector = new ErrorCollector();
 //	 

@@ -6,7 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 
 import org.selenium2automate.framework.GlobalConstants;
-import static org.selenium2automate.framework.WebDriverGenerator.getWebDriver;
+import static org.selenium2automate.framework.WebDriverGenerator.getDriver;
 
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
@@ -49,7 +49,7 @@ public class Hooks {
 		if (result.isFailed() && GlobalConstants.CAPTURE_SCREENSHOT.equalsIgnoreCase("Y")) {
 			System.out.println("embedding the screenshot for the failed scenario--" + result.getName());
 			try {
-				byte[] screenshot = ((TakesScreenshot) getWebDriver()).getScreenshotAs(OutputType.BYTES);
+				byte[] screenshot = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.BYTES);
 				result.embed(screenshot, "image/png");
 
 			} catch (WebDriverException wde) {

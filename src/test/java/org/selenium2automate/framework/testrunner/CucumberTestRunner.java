@@ -4,7 +4,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 
-import org.selenium2automate.framework.WebDriverGenerator;
+import static org.selenium2automate.framework.WebDriverGenerator.getDriver;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
@@ -42,7 +42,7 @@ public class CucumberTestRunner {
 	@AfterClass
 	public static void shutDown(){
 		try {
-			WebDriverGenerator.getWebDriver().close();
+			getDriver().close();
 		}catch (Exception e){
 			System.out.println("some exception occred in closing the browser");
 		}

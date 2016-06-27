@@ -23,7 +23,7 @@ public class screenshotUtilities {
 			//	+ filename);
 
 		//File scrFile = ((TakesScreenshot) new Augmenter().augment( driver ))
-	    File scrFile = ((TakesScreenshot) WebDriverGenerator.getWebDriver())
+	    File scrFile = ((TakesScreenshot) WebDriverGenerator.getDriver())
 				.getScreenshotAs(OutputType.FILE);
 		try {
 				//Logger.debug("the source screenshot file is :"+ scrFile.getCanonicalPath());

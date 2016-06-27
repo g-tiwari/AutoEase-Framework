@@ -44,7 +44,7 @@ import org.selenium2automate.framework.utilities.HostUtils;
 				//This constructor does not implement anything as of now
 			}
 			
-			public static WebDriverWait getWaitObject(){
+			public static WebDriverWait getWait(){
 				wait=new WebDriverWait(driver,Constants.EXPLICIT_WAIT_4_TIMEOUT);
 				return wait;
 			}
