@@ -24,25 +24,25 @@ public class RegexpUtils {
 
 	  /**
 	   * Validate password with regular expression
-	   * @param password password for validation
+	   * @param inputTester password for validation
 	   * @return true valid password, false invalid password
 	   */
-	  public boolean validate(final String inputtester){
+	  public boolean validate(final String inputTester){
 
-		  matcher = pattern.matcher(inputtester);
+		  matcher = pattern.matcher(inputTester);
 		  return matcher.matches();
 
 	  }
-	  public String validateString(final String inputtester){
-		  matcher = pattern.matcher(inputtester);
-		  List<String> matchedstr=new ArrayList<String>();
+	  public String validateString(final String inputTester){
+		  matcher = pattern.matcher(inputTester);
+		  List<String> matchedStr=new ArrayList<String>();
 		  while(matcher.find()){
 			 // matcher.
 			  System.out.println(matcher.groupCount());
-			   matchedstr.add(matcher.group());
+			  matchedStr.add(matcher.group());
 			 //  System.out.println("Matched content is:"+matcher.group());
 		  }
 		  
-		  return matchedstr.toString();
+		  return matchedStr.toString();
 	  }
 }

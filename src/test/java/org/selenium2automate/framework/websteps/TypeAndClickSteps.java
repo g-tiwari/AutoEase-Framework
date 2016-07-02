@@ -8,6 +8,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.selenium2automate.framework.WebDriverGenerator.getDriver;
@@ -42,6 +43,8 @@ public class TypeAndClickSteps {
 		@Then("^I click using native events on element identifier \"(.*)\"$")
 		public void I_click_using_actions_class_on_element_identifier(String params1) throws Throwable {
 		//throw new PendingException();
+			Actions builder = new Actions(getDriver());
+			builder.click(getDriver().findElement(getLocator(params1)));
 		
 		}
 
@@ -101,9 +104,14 @@ public class TypeAndClickSteps {
 		
 
 		@Then("^I type \"(.*)\" using javascript in field identifier \"(.*)\"$")
-		public void I_type_using_javascript_in_field_identifier(String params1,String params2){
+		public void I_type_using_javascript_in_field_identifier(String text,String locator){
 		//throw new PendingException();
-		
+            try {
+                JavascriptExecutor js = (JavascriptExecutor) getDriver();
+                js.executeScript("arguments[0].setAttribute('value', '\"+text+\"')", getDriver().findElement(getLocator(locator)));
+            }catch(Exception e){
+                Assert.fail(e.getMessage());
+            }
 		}
 		
 }

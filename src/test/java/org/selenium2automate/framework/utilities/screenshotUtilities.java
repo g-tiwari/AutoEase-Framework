@@ -1,17 +1,16 @@
 package org.selenium2automate.framework.utilities;
 
-import static java.io.File.separator;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.selenium2automate.framework.WebDriverGenerator;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-
-import org.selenium2automate.framework.WebDriverGenerator;
+import static java.io.File.separator;
 
 public class screenshotUtilities {
 	

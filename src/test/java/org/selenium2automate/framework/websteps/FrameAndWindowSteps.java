@@ -28,7 +28,6 @@ public class FrameAndWindowSteps {
 		 public boolean I_wait_for_number_of_windows_tobe(final int numberOfWindows)
 		    {
 			 try{
-				 
 		        new WebDriverWait(getDriver(), GlobalConstants.WINDOW_LOAD_TIME){}.until(new ExpectedCondition<Boolean>()
 	            		{
 				public Boolean apply(WebDriver driver)
@@ -40,7 +39,6 @@ public class FrameAndWindowSteps {
 			 }catch(Exception e){
 				 return false;
 		        }
-			 
 		    }
 	
 	/*
@@ -70,15 +68,12 @@ public class FrameAndWindowSteps {
 			}
 		}
 
-		
-		
 		@Then("^I switch back to previous window$")
 		public void I_switch_back_to_previous_window() throws Throwable {
 		//throw new PendingException();
 		
 		}
 
-		
 		@Then("^I switch to third window$")
 		public void I_switch_to_third_window() throws Throwable {
 		//throw new PendingException();
@@ -89,7 +84,6 @@ public class FrameAndWindowSteps {
 		@Then("^I switch to fourth window$")
 		public void I_switch_to_fourth_window() throws Throwable {
 		//throw new PendingException();
-		
 		}
 		
 		/*

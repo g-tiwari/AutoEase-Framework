@@ -1,5 +1,8 @@
 package org.selenium2automate.framework.testrunner;
 
+import cucumber.api.Scenario;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -13,12 +16,12 @@ import cucumber.api.junit.Cucumber;
 @CucumberOptions(
 		features = "classpath:Test Scenario/",
 		tags={"@Login"},
-		glue ={"com.autoease.framework.customizedsteps","com.autoease.framework.mobilesteps","com.autoease.framework.websteps"},
+		glue ={"org.selenium2automate.framework.customizedsteps","org.selenium2automate.framework.mobilesteps","org.selenium2automate.framework.websteps"},
 		monochrome = true, 
 		format={"pretty",
 				"json:target/cucumber-json-report/cucumber.json",
 				"html:target/cucumber-html-report",
-				"rerun:target/cucumber-failed-report/faile,d-rerun.txt"}
+				"rerun:target/cucumber-failed-report/failed-rerun.txt"}
 		)
 
 //,tags={"@groupTest"}
@@ -28,7 +31,6 @@ public class CucumberTestRunner {
 		//here goes the code to print the initiation of this framework
 
 	}
-
 
 	@BeforeClass
 	public static void setUp(){

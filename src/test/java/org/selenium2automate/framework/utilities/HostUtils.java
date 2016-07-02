@@ -1,9 +1,8 @@
 package org.selenium2automate.framework.utilities;
 
-import java.net.InetAddress;
-
 import org.apache.log4j.Logger;
 
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 

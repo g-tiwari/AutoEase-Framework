@@ -21,6 +21,7 @@ import static org.selenium2automate.framework.WebDriverGenerator.getLocator;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import org.selenium2automate.framework.utilities.WaitUtils;
 
 
 /**
@@ -41,30 +42,26 @@ import cucumber.api.java.en.Then;
  * 
  * @todo check FluentWait
  *
- * Copyright [2015] [Gaurav Tiwari]
+ * Copyright [2016] [Gaurav Tiwari]
  * 
  * 
  */
 public class WaitSteps {
-	
-	/** define the Default wait time for an element in Constants.java file */ 
-	public static final int DEFAULT_WAIT_4_ELEMENT = Constants.DEFAULT_WAIT_4_ELEMENT;
-	/** Define default wait time for a page to be displayed in Constants.java file.  
-	 * The average webpage load time is 10 seconds in 2015. 
-	 * Based on your tests, please set this value in Constant.java. 
-	 * "0" will nullify implicitlyWait and speed up a test. */ 
-	public static final int DEFAULT_WAIT_4_PAGE = Constants.DEFAULT_WAIT_4_PAGE;
-
-
-
 
 	@Given("^I wait for the page to load$")
-	public void I_wait_for_the_page_to_load() throws Throwable {
-	//throw new PendingException();
+	public void I_wait_for_the_page_to_load(){
+		try {
+			getWait().until(new
+									ExpectedCondition<Boolean>() {
+										public Boolean apply(WebDriver driver) {
+											return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
+										}
+									});
+		}catch (Exception e){
+			Assert.fail(e.getMessage());
+		}
 	
 	}
-
-	
 
 	/**
 	  * Wait for the element to be present in the DOM, and displayed on the page. 
@@ -74,7 +71,7 @@ public class WaitSteps {
 	  * @return
 	  */
 	@Then("^I wait for visibility of element \"(.*)\"$")
-	public void I_wait_for_visibility_of_element(String identifier) throws Throwable {
+	public void I_wait_for_visibility_of_element(String identifier){
 		WebElement element; 
 		try{	
 			//To use WebDriverWait(), we would have to nullify implicitlyWait(). 
@@ -85,7 +82,7 @@ public class WaitSteps {
 			WebDriverWait wait = new WebDriverWait(getDriver(), Constants.EXPLICIT_WAIT_4_TIMEOUT); 
 			element = wait.until(ExpectedConditions.visibilityOfElementLocated(getLocator(identifier)));
 			wait.until(ExpectedConditions.visibilityOfElementLocated(getLocator(identifier)));
-			getDriver().manage().timeouts().implicitlyWait(DEFAULT_WAIT_4_PAGE, TimeUnit.SECONDS); //reset implicitlyWait
+			getDriver().manage().timeouts().implicitlyWait(Constants.DEFAULT_WAIT_4_PAGE, TimeUnit.SECONDS); //reset implicitlyWait
 			Assert.assertTrue(element.getSize().height!=0); //return the element	
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -95,28 +92,37 @@ public class WaitSteps {
 	}
 
 	@And("^I wait for presence of element \"(.*)\"$")
-	public void I_wait_for_presence_of_element(String params1) throws Throwable {
+	public void I_wait_for_presence_of_element(String params1){
 		getWait().until(ExpectedConditions.presenceOfElementLocated(getLocator(params1)));
-	//throw new PendingException();
 	
 	}
 	
 	@And("^I wait for (\\d+) seconds$")
-	public void I_wait_for_seconds(int waittime) throws Throwable {
-		System.out.println("waiting for "+waittime +"seconds");
-		Long wait=(long) (waittime*1000);
-	Thread.sleep(wait);
+	public void I_wait_for_seconds(int waitTime){
+		try {
+			Long wait = (long) (waitTime * 1000);
+			Thread.sleep(wait);
+		}catch (Exception e){
+			System.out.println("Not able to wait for "+waitTime +" seconds "+e.getMessage());
+		}
 	}
 
 	@And("^I wait for element \"(.*)\" to be clickable$")
-	public void I_wait_for_element_to_be_clickable(String params1) throws Throwable {
-	//throw new PendingException();
-	
+	public void I_wait_for_element_to_be_clickable(String locator){
+		try {
+			getWait().until(ExpectedConditions.elementToBeClickable(getLocator(locator)));
+		}catch(Exception e){
+			Assert.fail(e.getMessage());
+		}
 	}
 
-	@And("^I wait for element \"(.*)\" to appear on the refreshed web-page$")
-	public void I_wait_for_element_to_appear_on_the_refreshed_web_page(String params1) throws Throwable {
-	//throw new PendingException();
+	@And("^I wait for element \"(.*)\" to appear on the refreshed web-page within (\\d+) seconds$")
+	public void I_wait_for_element_to_appear_on_the_refreshed_web_page(String locator,int time){
+        try {
+            WaitUtils.waitForElementRefresh(getDriver(), getLocator(locator), time);
+        }catch (Exception e){
+            Assert.fail(e.getMessage());
+        }
 	
 	}
 
@@ -128,8 +134,8 @@ public class WaitSteps {
 	  * 
 	  * @return test steps would be marked as fail if expected text is not found for the given identifier with in defined explicit wait time
 	  */
-	@And("^I Wait for the Text \"(.*)\" to be present in the element \"(.*)\"$")
-	public void I_Wait_for_the_Text_to_be_present_in_the_element(final String expected_Text,final String identifer) throws Throwable {
+	@And("^I wait for the Text \"(.*)\" to be present in the element \"(.*)\"$")
+	public void I_Wait_for_the_Text_to_be_present_in_the_element(final String expected_Text,final String identifer){
 		boolean isPresent = false; 
 		try{	
 			getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS); //nullify implicitlyWait() 
@@ -137,11 +143,11 @@ public class WaitSteps {
 	        }.until(new ExpectedCondition<Boolean>() {
 
 	            public Boolean apply(WebDriver driver) {
-	            	return isTextPresent(getLocator(identifer), expected_Text); //is the Text in the DOM
+	            	return WaitUtils.isTextPresent(getDriver(),getLocator(identifer), expected_Text); //is the Text in the DOM
 	            }
 	        });
-	        isPresent = isTextPresent(getLocator(identifer), expected_Text);
-			getDriver().manage().timeouts().implicitlyWait(DEFAULT_WAIT_4_PAGE, TimeUnit.SECONDS); //reset implicitlyWait
+	        isPresent = WaitUtils.isTextPresent(getDriver(),getLocator(identifer), expected_Text);
+			getDriver().manage().timeouts().implicitlyWait(Constants.DEFAULT_WAIT_4_PAGE, TimeUnit.SECONDS); //reset implicitlyWait
 			Assert.assertTrue(isPresent);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -153,11 +159,11 @@ public class WaitSteps {
 	 * Waits for the Condition of JavaScript.  
 	 *
 	 *
-	 * @param String	The javaScript condition we are waiting. e.g. "return (xmlhttp.readyState >= 2 && xmlhttp.status == 200)" 
+	 * @param jsCodeString	The javaScript condition we are waiting. e.g. "return (xmlhttp.readyState >= 2 && xmlhttp.status == 200)"
 	 * @return test steps would be marked as fail if jquery condition does not get true with in the explicit wait time
 	 **/
-	@And("^I Wait for the JavaScript condition \"(.*)\" to be true$")
-	public void I_Wait_for_the_JavaScript_condition_to_be_true(final String jsCode) throws Throwable {
+	@And("^I wait for the JavaScript condition \"(.*)\" to be true$")
+	public void I_Wait_for_the_JavaScript_condition_to_be_true(final String jsCodeString){
 		boolean jscondition = false; 
 		try{	
 			getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS); //nullify implicitlyWait() 
@@ -166,11 +172,11 @@ public class WaitSteps {
 
 
 	            public Boolean apply(WebDriver driver) {
-	            	return (Boolean) ((JavascriptExecutor) driver).executeScript(jsCode);
+	            	return (Boolean) ((JavascriptExecutor) driver).executeScript(jsCodeString);
 	            }
 	        });
-	        jscondition =  (Boolean) ((JavascriptExecutor) getDriver()).executeScript(jsCode); 
-			getDriver().manage().timeouts().implicitlyWait(DEFAULT_WAIT_4_PAGE, TimeUnit.SECONDS); //reset implicitlyWait
+	        jscondition =  (Boolean) ((JavascriptExecutor) getDriver()).executeScript(jsCodeString);
+			getDriver().manage().timeouts().implicitlyWait(Constants.DEFAULT_WAIT_4_PAGE, TimeUnit.SECONDS); //reset implicitlyWait
 			Assert.assertTrue(jscondition);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -184,8 +190,8 @@ public class WaitSteps {
 	 * 
 	 * @return test steps would be marked as fail if jquery condition does not get true with in the explicit wait time
 	 * */
-	@And("^I Wait for the completion of Ajax jQuery processing by checking return jQuery.active == 0 condition$")
-	public void I_Wait_for_the_completion_of_Ajax_jQuery_processing_by_checking_return_jQuery_active_condition() throws Throwable {
+	@And("^I wait for the completion of Ajax jQuery processing by checking return jQuery.active == 0 condition$")
+	public void I_Wait_for_the_completion_of_Ajax_jQuery_processing_by_checking_return_jQuery_active_condition(){
 		boolean jQcondition = false; 
 		try{	
 			getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS); //nullify implicitlyWait() 
@@ -197,7 +203,7 @@ public class WaitSteps {
 	            }
 	        });
 	        jQcondition = (Boolean) ((JavascriptExecutor) getDriver()).executeScript("return jQuery.active == 0");
-			getDriver().manage().timeouts().implicitlyWait(DEFAULT_WAIT_4_PAGE, TimeUnit.SECONDS); //reset implicitlyWait
+			getDriver().manage().timeouts().implicitlyWait(Constants.DEFAULT_WAIT_4_PAGE, TimeUnit.SECONDS); //reset implicitlyWait
 			//return jQcondition;
 			Assert.assertTrue(jQcondition);
 		} catch (Exception e) {
@@ -211,8 +217,12 @@ public class WaitSteps {
 	 * Coming to implicit wait, If you have set it once then you would have to explicitly set it to zero to nullify it -
 	 */
 	@And("^I reset the implicit wait to zero$")
-	public void I_set_the_implicit_wait_to_zero() throws Throwable {
-		getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS); //nullify implicitlyWait() 
+	public void I_set_the_implicit_wait_to_zero(){
+		try {
+			getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS); //nullify implicitlyWait()
+		}catch (Exception e){
+			Assert.fail(e.getMessage());
+		}
 	
 	}
 
@@ -221,201 +231,24 @@ public class WaitSteps {
 	 * set it to zero to nullify it before setting it with a default time value. 
 	 */
 	@And("^I reset the implicit wait to default implicit wait$")
-	public void I_set_the_implicit_wait_to_default_implicit_wait() throws Throwable {
-		getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS); //nullify implicitlyWait() 
-		getDriver().manage().timeouts().implicitlyWait(DEFAULT_WAIT_4_PAGE, TimeUnit.SECONDS); //reset implicitlyWait
+	public void I_set_the_implicit_wait_to_default_implicit_wait(){
+		try {
+			getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS); //nullify implicitlyWait()
+			WaitUtils.resetImplicitWait(getDriver(), Constants.DEFAULT_WAIT_4_PAGE);
+		}catch (Exception e){
+			Assert.fail(e.getMessage());
+		}
 	
 	}
 
 	@And("^I reset the implicit wait to (\\d+)$")
-	public void I_set_the_implicit_wait_to_6(int param1) throws Throwable {
-	//throw new PendingException();
-		System.out.println("implicit wait is set");
-	
-	}
-
-	
-	
-	
-
-
-
-
-	/**
-	  * Wait for the element to be present in the DOM, regardless of being displayed or not.
-	  * And returns the first WebElement using the given method.
-	  *
-	  * @param By	selector to find the element
-	  * @param int	The time in seconds to wait until returning a failure
-	  * 
-	  * @return WebElement	the first WebElement using the given method, or null (if the timeout is reached)
-	  */
-	public WebElement waitForElementPresent(final By by, int timeOutInSeconds) {
-		WebElement element; 
-		try{
-			getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS); //nullify implicitlyWait() 
-
-			WebDriverWait wait = new WebDriverWait(getDriver(), timeOutInSeconds); 
-			element = wait.until(ExpectedConditions.presenceOfElementLocated(by));
-
-			getDriver().manage().timeouts().implicitlyWait(DEFAULT_WAIT_4_PAGE, TimeUnit.SECONDS); //reset implicitlyWait
-			return element; //return the element
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-		return null; 
-	}
-
-
-	/**
-	  * Wait for the List<WebElement> to be present in the DOM, regardless of being displayed or not.
-	  * Returns all elements within the current page DOM. 
-	  *
-	  * @param By	selector to find the element
-	  * @param int	The time in seconds to wait until returning a failure
-	  *
-	  * @return List<WebElement> all elements within the current page DOM, or null (if the timeout is reached)
-	  */
-	public List<WebElement> waitForListElementsPresent(final By by, int timeOutInSeconds) {
-		List<WebElement> elements; 
-		try{	
-			getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS); //nullify implicitlyWait() 
-
-			WebDriverWait wait = new WebDriverWait(getDriver(), timeOutInSeconds); 
-			wait.until((new ExpectedCondition<Boolean>() {
-	            public Boolean apply(WebDriver driver) {
-	                return areElementsPresent(by);
-	            }
-	        }));
-
-			elements = getDriver().findElements(by); 
-			getDriver().manage().timeouts().implicitlyWait(DEFAULT_WAIT_4_PAGE, TimeUnit.SECONDS); //reset implicitlyWait
-			return elements; //return the element	
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-		return null; 
-	}
-
-	/**
-	  * Wait for an element to appear on the refreshed web-page.
-	  * And returns the first WebElement using the given method.
-	  *
-	  * This method is to deal with dynamic pages.
-	  * 
-	  * Some sites I (Mark) have tested have required a page refresh to add additional elements to the DOM.  
-	  * Generally you (Chon) wouldn't need to do this in a typical AJAX scenario.
-	  *
-	  * @param locator	selector to find the element
-	  * @param int	The time in seconds to wait until returning a failure
-	  * 
-	  * @return WebElement	the first WebElement using the given method, or null(if the timeout is reached)
-	  * 
-	  * @author Mark Collin 
-	  */
-	 public WebElement waitForElementRefresh(final By by, 
-			                           int timeOutInSeconds) {
-		WebElement element; 
-		try{	
-			getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS); //nullify implicitlyWait() 
-		        new WebDriverWait(getDriver(), timeOutInSeconds) {
-		        }.until(new ExpectedCondition<Boolean>() {
-
-		            
-		            public Boolean apply(WebDriver driver) {
-		                driver.navigate().refresh(); //refresh the page ****************
-		                return isElementPresentAndDisplay(by);
-		            }
-		        });
-		    element = getDriver().findElement(by);
-			getDriver().manage().timeouts().implicitlyWait(DEFAULT_WAIT_4_PAGE, TimeUnit.SECONDS); //reset implicitlyWait
-			return element; //return the element
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-		return null; 
-	 }
-
-	
-
-	/**
-	 * Set getDriver() implicitlyWait() time. 
-	 */
-	public void setImplicitWait(int waitTime_InSeconds) {
-		getDriver().manage().timeouts().implicitlyWait(waitTime_InSeconds, TimeUnit.SECONDS);  
-	} 
-
-
-	/**
-	 * Reset ImplicitWait.  
-	 * @param int - a new wait time in seconds
-	 */
-	public void resetImplicitWait(int waitTimeSeconds) {
-		getDriver().manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS); //nullify implicitlyWait() 
-		getDriver().manage().timeouts().implicitlyWait(waitTimeSeconds, TimeUnit.SECONDS); //reset implicitlyWait
-	} 
-
-
-     /**
-	   * Checks if the text is present in the element. 
-       *
-	   * @param by - selector to find the element that should contain text
-	   * @param text - The Text element you are looking for
-	   * @return true or false
-	   */
-	private boolean isTextPresent(By by, String text)
-	{
+	public void I_set_the_implicit_wait_to_someValue(int seconds){
 		try {
-				return getDriver().findElement(by).getText().contains(text);
-		} catch (NullPointerException e) {
-				return false;
+			WaitUtils.resetImplicitWait(getDriver(), seconds);
+		}catch (Exception e){
+			Assert.fail(e.getMessage());
 		}
-	}
-
-
-	/**
-	 * Checks if the elment is in the DOM, regardless of being displayed or not.
-	 *
-	 * @param by - selector to find the element
-	 * @return boolean
-	 */
-	private boolean isElementPresent(By by) {
-		try {
-			getDriver().findElement(by);//if it does not find the element throw NoSuchElementException, which calls "catch(Exception)" and returns false; 
-			return true;
-		} catch (NoSuchElementException e) {
-			return false;
-		}
-	}
-
-
-	/**
-	 * Checks if the List<WebElement> are in the DOM, regardless of being displayed or not.
-	 *
-	 * @param by - selector to find the element
-	 * @return boolean
-	 */
-	private boolean areElementsPresent(By by) {
-		try {
-			getDriver().findElements(by); 
-			return true; 
-		} catch (NoSuchElementException e) {
-			return false;
-		}
-	}
-
-	/**
-	 * Checks if the elment is in the DOM and displayed. 
-	 *
-	 * @param by - selector to find the element
-	 * @return boolean
-	 */
-	private boolean isElementPresentAndDisplay(By by) {
-		try {			
-			return getDriver().findElement(by).isDisplayed();
-		} catch (NoSuchElementException e) {
-			return false;
-		}
+	
 	}
 
 

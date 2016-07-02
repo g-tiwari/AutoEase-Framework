@@ -9,14 +9,14 @@
 
 package org.selenium2automate.framework.utilities;
 
+import org.apache.log4j.Logger;
+
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.log4j.Logger;
 
 /**
  * ClassName:TimeUtils 
